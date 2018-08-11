@@ -1,2 +1,2 @@
-requests
-anytree
+requests >= 2.19.1
+anytree >= 2.4.3
