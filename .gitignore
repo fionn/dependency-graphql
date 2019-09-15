@@ -1,5 +1,8 @@
-__pycache__
-.mypy_cache
-credentials.py
+__pycache__/
+.mypy_cache/
+venv/
+*.egg-info
+tags
 schema
 *.swp
+.env

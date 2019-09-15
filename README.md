@@ -1,20 +1,19 @@
 Repository Dependency Graphs
 ----------------------------
 
-Generates (shallow) dependency trees for GitHub repositories.
+Creates (shallow) dependency trees for GitHub repositories.
 
-Generate a personal access token with `repo_scope` and make a `credentials.py` file with `TOKEN = your_token`.
+Generate a personal access token with `repo_scope` and export it as the environment variable `GITHUB_TOKEN`.
 
-Example usage: `./dependency_graphql.py iamfionn/dependency-graphql`. This would return
+Example usage: `./dependency_graphql.py fionn/dependency-graphql`. This would return something like
 
 ```
-iamfionn/dependency-graphql
+fionn/dependency-graphql
 └── requirements.txt
-    ├── c0fec0de/anytree >= 2.4.3
+    ├── c0fec0de/anytree >= 2.6.0
     │   └── ⋯
-    └── requests/requests >= 2.19.1
+    └── psf/requests >= 2.22.0
         └── ⋯
 ```
 
 where the ellipsis implies sub-dependencies.
-
