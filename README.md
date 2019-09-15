@@ -5,7 +5,9 @@ Creates (shallow) dependency trees for GitHub repositories.
 
 Generate a personal access token with `repo_scope` and export it as the environment variable `GITHUB_TOKEN`.
 
-Example usage: `./dependency_graphql.py fionn/dependency-graphql`. This would return something like
+Install with `make install` or `make install_dev`.
+
+Example usage: `dependency-graphql fionn/dependency-graphql`. This would return something like
 
 ```
 fionn/dependency-graphql
