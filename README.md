@@ -1,11 +1,16 @@
-Repository Dependency Graphs
-----------------------------
+# Repository Dependency Graphs
 
-Creates dependency trees for GitHub repositories.
+Create dependency trees for GitHub repositories.
 
-Generate a personal access token with `repo_scope` and export it as the environment variable `GITHUB_TOKEN`.
+## Authentication
+
+Generate a personal access token with `repo.public_repo` scope and export it as `GITHUB_TOKEN`.
+
+## Installation
 
 Install with `make install` or `make install_dev`.
+
+## Usage
 
 Example usage: `dependency-graphql fionn/dependency-graphql`. This would return something like
 
