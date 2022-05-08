@@ -75,7 +75,7 @@ class DependencyGraph:
         }""" % (owner, name)
         return self._api.run_query(query)
 
-    def dependency_tree(self, repo: str) -> Node:
+    def dependency_tree(self, repo: str, limit: int, depth: int = 0) -> Node:
         """Query and generate a tree from the response"""
         data = self._shallow_dependencies(repo)
         if data.get("errors"):
@@ -85,32 +85,37 @@ class DependencyGraph:
         manifests = data["data"]["repository"]["dependencyGraphManifests"]
         for manifest in manifests["nodes"]:
             manifest_node = Node(manifest["blobPath"].split("/")[-1])
-            manifest_node.parent = package_node
+            if manifest["dependencies"]["nodes"]:
+                manifest_node.parent = package_node
             for dependency in manifest["dependencies"]["nodes"]:
                 try:
                     dependency_id = dependency["repository"]["nameWithOwner"]
                 # Sometimes dependency repositories don't exist.
                 except TypeError:
                     dependency_id = dependency["packageName"]
-                dependency_node = Node("{} {}".format(dependency_id,
-                                                      dependency["requirements"]))
+                dependency_node = Node(f"{dependency_id} {dependency['requirements']}")
                 dependency_node.parent = manifest_node
                 if dependency["hasDependencies"]:
-                    Node("⋯ ").parent = dependency_node
+                    if depth >= limit:
+                        Node("⋯ ").parent = dependency_node
+                    else:
+                        self.dependency_tree(dependency_id,
+                                             limit, depth + 1).parent = dependency_node
         return package_node
 
 def main() -> None:
     """Entry point"""
     parser = argparse.ArgumentParser(description="Generate dependency graph")
     parser.add_argument("repository", help="the GitHub owner/repository")
+    parser.add_argument("-r", "--recursion-depth", type=int, default=0)
     args = parser.parse_args()
 
     api = GraphAPI(token=os.environ["GITHUB_TOKEN"])
     dependencies = DependencyGraph(api)
-    tree = dependencies.dependency_tree(args.repository)
+    tree = dependencies.dependency_tree(args.repository, limit = args.recursion_depth)
 
     for pre, _, node in RenderTree(tree):
-        print("{}{}".format(pre, node.name))
+        print(f"{pre}{node.name}")
 
 if __name__ == "__main__":
     main()
