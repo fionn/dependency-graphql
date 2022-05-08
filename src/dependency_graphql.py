@@ -14,15 +14,14 @@ class GraphAPI:
     def __init__(self, token: str,
                  endpoint: str = "https://api.github.com/graphql") -> None:
         self.endpoint = endpoint
-        authentication_header = {"Authorization": "bearer {}".format(token)}
-        preview_header = {"Accept": "application/vnd.github.hawkgirl-preview, "
-                                    "application/vnd.github.vixen-preview"}
-        self.header = {**authentication_header, **preview_header}
+        self.session = requests.Session()
+        authentication_header = {"Authorization": f"bearer {token}"}
+        preview_header = {"Accept": "application/vnd.github.hawkgirl-preview"}
+        self.session.headers.update({**authentication_header, **preview_header})
 
     def run_query(self, query: str) -> dict:
         """Make a generic GraphQL query"""
-        response = requests.post(self.endpoint, json={"query": query},
-                                 headers=self.header)
+        response = self.session.post(self.endpoint, json={"query": query})
         response.raise_for_status()
         return response.json()
 
@@ -40,7 +39,7 @@ class GraphAPI:
         response = self.run_query(query)
         return response["data"]["rateLimit"]
 
-class DependencyGraph: # pylint: disable=too-few-public-methods
+class DependencyGraph:
     """Wrapper for generating dependency trees"""
 
     def __init__(self, api: GraphAPI) -> None:
@@ -51,13 +50,6 @@ class DependencyGraph: # pylint: disable=too-few-public-methods
         query = """{
             repository(owner: \"%s\", name: \"%s\")
             {
-                vulnerabilityAlerts(first: 100)
-                {
-                    nodes
-                    {
-                        affectedRange
-                    }
-                }
                 dependencyGraphManifests(first: 100)
                 {
                     nodes
