@@ -18,6 +18,9 @@ install: requirements.txt $(SRC)
 install_dev: venv
 	@source $(VIRTUAL_ENV)/bin/activate && pip install -e .[dev]
 
+build: $(SRC)
+	@python -m build
+
 .PHONY: outdated
 outdated: $(VIRTUAL_ENV)
 	@source $(VIRTUAL_ENV)/bin/activate && pip list --outdated
