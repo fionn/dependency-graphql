@@ -3,7 +3,7 @@ SRC = src/
 
 venv: requirements.txt
 	@python3 -m venv $@ --prompt $@::dgr
-	@source $@/bin/activate && pip install -r $< && pip install pylint mypy
+	@source $@/bin/activate && pip install -r $< && pip install pylint mypy types-requests
 	@echo "enter virtual environment: source $@/bin/activate"
 
 tags: $(SRC)
