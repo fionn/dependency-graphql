@@ -19,7 +19,7 @@ fionn/dependency-graphql
 └── requirements.txt
     ├── c0fec0de/anytree = 2.8.0
     │   └── ⋯
-    └── psf/requests = 2.27.1
+    └── psf/requests = 2.31.0
         └── ⋯
 ```
 
